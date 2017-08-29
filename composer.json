@@ -1,0 +1,17 @@
+{
+    "name": "fannypack/beyonic",
+    "authors": [
+        {
+            "name": "Mpande Andrew",
+            "email": "andrewmvp007@gmail.com"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "~6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "FannyPack\\Beyonic\\": "src/"
+        }
+    }
+}
