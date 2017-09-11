@@ -43,11 +43,11 @@ return [
 ## Usage in context of your beyonic account
 Requesting payment from a registered mobile money number
 ```php
-$response = Beyonic::deposit($phone_number, $price);
+$response = Beyonic::deposit($from_phone_number, $amount);
 ```
 Sending payment to a registered mobile money number
 ```php
-$response = Beyonic::withdraw($phone_number, $amount, $reason);
+$response = Beyonic::withdraw($to_phone_number, $amount, $reason);
 ```
 For information about the response body visit [Beyonic](https://apidocs.beyonic.com)
 
