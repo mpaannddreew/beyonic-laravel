@@ -1,5 +1,7 @@
 {
     "name": "fannypack/beyonic",
+    "description": "laravel beyonic mobile money payment implementation",
+    "keywords": ["library", "laravel", "php", "payments", "mobile money", "beyonic"],
     "authors": [
         {
             "name": "Mpande Andrew",
