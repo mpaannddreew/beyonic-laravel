@@ -19,7 +19,7 @@ FannyPack\Beyonic\BeyonicServiceProvider::class,
 Register Facade
 Register service provider
 ```php
-'Beyonic' => FannyPack\Beyonic\BeyonicProcessor::class,
+'Beyonic' => FannyPack\Beyonic\Beyonic::class,
 ```
 
 After the service provider is registered run this command
