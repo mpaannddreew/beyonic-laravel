@@ -39,11 +39,27 @@ return [
 ];
 ```
 
-
 ## Usage in context of your beyonic account
+Using it with your models, add 
+```php
+namespace App;
+
+use FannyPack\Beyonic\Billable;
+use Illuminate\Database\Eloquent\Model;
+
+class Account extends Model
+{
+    use Billable;
+}
+```
+
 Requesting payment from a registered mobile money number
 ```php
 $response = Beyonic::deposit($from_phone_number, $amount);
+```
+Information about a Collection request
+```php
+$response = Beyonic::info($id);
 ```
 Sending payment to a registered mobile money number
 ```php
