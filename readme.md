@@ -10,7 +10,7 @@ Note: You must have a valid Beyonic account to use this library
 For more information visit [Beyonic](https://apidocs.beyonic.com)
 
 ## Installation
-git clone https://github.com/mpaannddreew/beyonic-laravel.git
+composer require fannypack/beyonic
 
 Register service provider
 ```php
