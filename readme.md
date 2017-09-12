@@ -23,11 +23,17 @@ Register service provider
 ```
 
 After the service provider is registered run this command
-```
+```php
 php artisan vendor:publish
 ```
-This command will create a copy of the library's config file and migrations into your code base <pre>beyonic.php</pre>
-
+This command will create a copy of the library's config file and migrations into your code base 
+```php
+beyonic.php
+```
+Run migrations
+```php
+php artisan migrate
+```
 ## Environment setup
 The library loads configurations from the .env file in your application's root folder. These are the contents of beyonic.php
 ```
