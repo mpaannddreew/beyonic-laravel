@@ -2,6 +2,7 @@
 
 namespace FannyPack\Beyonic;
 
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Support\ServiceProvider;
 
@@ -39,7 +40,7 @@ class BeyonicServiceProvider extends ServiceProvider
                     ],
                     'verify' => false
                 ]
-            ), $app);
+            ), $app, new Carbon());
         });
     }
     

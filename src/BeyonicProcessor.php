@@ -8,6 +8,7 @@
 
 namespace FannyPack\Beyonic;
 
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Contracts\Foundation\Application;
 class BeyonicProcessor
@@ -40,14 +41,21 @@ class BeyonicProcessor
     private $account_id;
 
     /**
+     * @var Carbon
+     */
+    private $time;
+
+    /**
      * BeyonicProcessor constructor.
      * @param Client $client
      * @param Application $app
+     * @param Carbon $time
      */
-    public function __construct(Client $client, Application $app)
+    public function __construct(Client $client, Application $app, Carbon $time)
     {
         $this->client = $client;
         $this->app = $app;
+        $this->time = $time;
         $this->setOptions();
     }
 
@@ -66,34 +74,49 @@ class BeyonicProcessor
     /**
      * deposit to a beyonic account
      *
-     * @param $from
+     * @param $billable
      * @param $amount
-     * @return string
+     * @param string $reason
+     * @param null|string $phone_number
+     * @return Payment
      */
-    public function deposit($from, $amount)
+    public function withdraw($billable, $amount, $reason="Payment", $phone_number=null)
     {
+        $phone_number = is_null($phone_number) ? $billable->phone_number: $phone_number;
         $data = [
-            "phonenumber" => $from,
+            "phonenumber" => $phone_number,
             "amount" => $amount,
             "currency" => $this->currency,
             "send_instructions" => True
         ];
+
         $response = $this->client->post(self::API_URL . 'collectionrequests', ['json' => $data]);
-        return json_decode($response->getBody()->getContents());
+
+        $response = json_decode($response->getBody()->getContents());
+
+        return $billable->payments()->create([
+            'transaction_id' => $response->id,
+            'initiated_at' => $this->time->now($this->time->getTimezone()),
+            'amount' => $amount,
+            'phone_number' => $phone_number,
+            'reason' => $reason
+        ]);
     }
 
     /**
      * withdraw to a mobile number
      *
-     * @param $to
+     * @param $billable
      * @param $amount
-     * @param $reason
-     * @return string
+     * @param string $reason
+     * @param null|string $phone_number
+     * @return Payment
      */
-    public function withdraw($to, $amount, $reason)
+    public function deposit($billable, $amount, $reason="Payment", $phone_number=null)
     {
+        $phone_number = is_null($phone_number) ? $billable->phone_number: $phone_number;
         $data = [
-            "phonenumber" => $to,
+            "phonenumber" => $phone_number,
             "amount" => $amount,
             "currency" => $this->currency,
             "description" => $reason
@@ -105,18 +128,27 @@ class BeyonicProcessor
             $data["callback_url"] = $this-> callback_url;
 
         $response = $this->client->post(self::API_URL . 'payments', ['json' => $data]);
-        return json_decode($response->getBody()->getContents());
+
+        $response = json_decode($response->getBody()->getContents());
+
+        return $billable->payments()->create([
+            'transaction_id' => $response->id,
+            'initiated_at' => $this->time->now($this->time->getTimezone()),
+            'amount' => $amount,
+            'phone_number' => $phone_number,
+            'reason' => $reason
+        ]);
     }
 
     /**
      * get a single collection request
      *
-     * @param $id
-     * @return mixed
+     * @param Payment $payment
+     * @return string
      */
-    public function info($id)
+    public function info(Payment $payment)
     {
-        $response = $this->client->get(self::API_URL . 'collectionrequests/'. $id);
+        $response = $this->client->get(self::API_URL . 'collectionrequests/'. $payment->transaction_id);
         return json_decode($response->getBody()->getContents());
     }
 }

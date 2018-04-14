@@ -12,15 +12,16 @@ For more information visit [Beyonic](https://apidocs.beyonic.com)
 ## Installation
 composer require fannypack/beyonic
 
-Register service provider
+For Laravel <= 5.4 Register service provider
 ```php
 FannyPack\Beyonic\BeyonicServiceProvider::class,
 ```
-Register Facade
-Register service provider
+For Laravel <= 5.4 Register Facade
 ```php
 'Beyonic' => FannyPack\Beyonic\Beyonic::class,
 ```
+
+For Laravel > 5.4 Service provider and Facade are discovered automatically
 
 After the service provider is registered run this command
 ```php
@@ -30,7 +31,7 @@ This command will create a copy of the library's config file and migrations into
 ```php
 beyonic.php
 ```
-Run migrations
+Run migrations to create beyonic_payments table to store your payment instances
 ```php
 php artisan migrate
 ```
@@ -40,13 +41,13 @@ The library loads configurations from the .env file in your application's root f
 return [
     'apiKey' => env('BEYONIC_API_KEY', ''),
     'currency' => env('CURRENCY', 'UGX'),
-    'callback_url' => env('CALLBACK_URL', 'UGX'),
+    'callback_url' => env('CALLBACK_URL', ''),
     'account_id' => env('ACCOUNT_ID', ''),
 ];
 ```
 
 ## Usage in context of your beyonic account
-Using it with your models, add 
+Using it with your models, add trait FannyPack\Beyonic\Billable to your models and make sure your model has a phone_number field
 ```php
 namespace App;
 
@@ -59,17 +60,27 @@ class Account extends Model
 }
 ```
 
-Requesting payment from a registered mobile money number
+Requesting payment from a billable instance, this method takes an optional phone number in case you want to provide a 
+different number to withdraw the funds from and the method returns a FannyPack\Beyonic\Payment::class instance
 ```php
-$response = Beyonic::deposit($from_phone_number, $amount);
+$account = Account::find(1);
+$payment = Beyonic::deposit($account, $amount, $reason, $optional_phone_number);
+// or
+$payment = $account->deposit($amount, $reason, $optional_phone_number);
 ```
 Information about a Collection request
 ```php
-$response = Beyonic::info($id);
+$response = Beyonic::info($account);
+// or
+$response = $account->info();
 ```
-Sending payment to a registered mobile money number
+Sending payment to th phone number associated with the billable instance, this method takes an optional phone number 
+in case you want to provide a different number to deposit the funds to and the method returns a 
+FannyPack\Beyonic\Payment::class instance
 ```php
-$response = Beyonic::withdraw($to_phone_number, $amount, $reason);
+$payment = Beyonic::withdraw($account, $amount, $reason, $optional_phone_number);
+// or
+$payment = $account->withdraw($amount, $reason, $optional_phone_number);
 ```
 For information about the response body visit [Beyonic](https://apidocs.beyonic.com)
 

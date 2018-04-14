@@ -17,4 +17,26 @@ trait Billable
     {
         return $this->morphMany(Payment::class, 'billable')->orderBy('id', 'desc');
     }
+
+    /**
+     * @param $amount
+     * @param string $reason
+     * @param null|string $phone_number
+     * @return mixed
+     */
+    public function withdraw($amount, $reason="Payment", $phone_number=null)
+    {
+        return Beyonic::withdraw($this, $amount, $reason, $phone_number);
+    }
+
+    /**
+     * @param $amount
+     * @param string $reason
+     * @param null|string $phone_number
+     * @return mixed
+     */
+    public function deposit($amount, $reason="Payment", $phone_number=null)
+    {
+        return Beyonic::deposit($this, $amount, $reason, $phone_number);
+    }
 }

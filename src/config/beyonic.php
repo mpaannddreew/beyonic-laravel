@@ -9,6 +9,6 @@
 return [
     'apiKey' => env('BEYONIC_API_KEY', ''),
     'currency' => env('CURRENCY', 'UGX'),
-    'callback_url' => env('CALLBACK_URL', 'UGX'),
+    'callback_url' => env('CALLBACK_URL', ''),
     'account_id' => env('ACCOUNT_ID', ''),
 ];

@@ -25,4 +25,12 @@ class Payment extends Model
     {
         return $this->morphTo();
     }
+
+    /**
+     * @return mixed
+     */
+    public function info()
+    {
+        return Beyonic::info($this);
+    }
 }
