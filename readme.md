@@ -70,9 +70,10 @@ $payment = $account->deposit($amount, $reason, $optional_phone_number);
 ```
 Information about a Collection request
 ```php
-$response = Beyonic::info($account);
+$payment = $account->payments[0]
+$response = Beyonic::info($payment);
 // or
-$response = $account->info();
+$response = $payment->info();
 ```
 Sending payment to th phone number associated with the billable instance, this method takes an optional phone number 
 in case you want to provide a different number to deposit the funds to and the method returns a 
